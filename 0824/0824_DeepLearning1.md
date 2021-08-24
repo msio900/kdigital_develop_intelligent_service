@@ -148,5 +148,7 @@ model.add(Dense(1, activation ='sigmoid'))
 * 다항 분류 문제
   * loss = categorical_crossentropy
 
-## 교차검증
+## BOSTON 예제
+
+![boston_model](boston_model.png)
 
