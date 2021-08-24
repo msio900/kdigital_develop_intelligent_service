@@ -56,3 +56,28 @@
 
 ### 케라스 준비하기
 
+* 파이참 접속
+  * conda 선택 - 버전 3.8
+  * 세팅 - python Interpreter
+
+
+
+## 머신러닝 프로세스 간략히 살펴보기
+
+> 문제 정의 및 데이터 준비하기 - 학습하기 - 추론 및 평가
+
+### 1. 데이터 준비하기
+
+#### 과소표집과 과대표집
+
+![과소표집과 과대표집](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\다운로드 (2).png)
+
+* 과소표집
+* 과대표집
+
+#### 회귀와 분류
+
+
+
+
+
