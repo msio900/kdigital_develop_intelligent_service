@@ -48,7 +48,7 @@
 * cmd로
 
   ```powershell
-  python -V 버전 확인
+  ![Hold-out-method-Training-Validation-Test-Dataset](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\Hold-out-method-Training-Validation-Test-Dataset.png)python -V 버전 확인
   3.8.8
   ```
 
@@ -77,7 +77,13 @@
 
 #### 회귀와 분류
 
+#### 원핫 인코딩(One Hot encoding)
 
+* 원핫 인코딩
+* min max -정규화
+* 결과값 도출
 
+#### 교차검증(cross-validation)
 
+![홀드아웃 기법](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\Hold-out-method-Training-Validation-Test-Dataset.png)
 
