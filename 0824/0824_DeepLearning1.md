@@ -103,3 +103,50 @@ model.fit(x_train, y_train, epochs=300, verbose=0);
 
 ```
 
+## 신경망
+
+![DLmodel](DL_model.png)
+
+
+
+###  퍼셉트론
+
+> p.71
+
+### 다층 퍼셉트론
+
+![다층퍼셉트론](%EB%8B%A4%EC%B8%B5%ED%8D%BC%EC%85%89%ED%8A%B8%EB%A1%A0.png)
+
+* `hidden layer`들 + `output layer`  : 마지막 `dense`는 결과를 도출해내는 도출
+
+## 케라스에서의 개발 과정
+
+> p.84
+
+```python
+model = Sequential()
+model.add(Dense(32, input_shape = (2,), activation = 'relu')) # hidden layer
+model.add(Dense(1, activation ='sigmoid'))
+```
+
+* 단층 퍼셉트론
+
+![단층 퍼셉트론](%ED%8D%BC%EC%85%89%ED%8A%B8%EB%A1%A02.png)
+
+* 은닉층의 추가
+
+
+
+![은닉층 추가](%EC%9D%80%EB%8B%89%EC%B8%B5.png)
+
+* 평균 제곱 오차 회귀 문제
+  * loss = mse
+
+* 이항분류 문제
+  * loss = binary_crossentropy
+
+* 다항 분류 문제
+  * loss = categorical_crossentropy
+
+## 교차검증
+
