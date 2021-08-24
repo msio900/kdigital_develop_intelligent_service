@@ -4,11 +4,11 @@
 
 ### 시작하며
 
-![세 가지 용어의 관계](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\21-1.png)
+![세 가지 용어의 관계](21-1.png)
 
 * 자바를 공부한 사람들이 많지 않다...
 
-![전통 프로그래밍과 머신러닝](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\Machine-Learning-in-contrast-to-classical-programming-according-to-26-p-5-Machine.png)
+![전통 프로그래밍과 머신러닝](Machine-Learning-in-contrast-to-classical-programming-according-to-26-p-5-Machine.png)
 
 보스톤의 집 값은 정답.
 
@@ -48,7 +48,7 @@
 * cmd로
 
   ```powershell
-  ![Hold-out-method-Training-Validation-Test-Dataset](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\Hold-out-method-Training-Validation-Test-Dataset.png)python -V 버전 확인
+  python -V 버전 확인
   3.8.8
   ```
 
@@ -70,7 +70,7 @@
 
 #### 과소표집과 과대표집
 
-![과소표집과 과대표집](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\다운로드 (2).png)
+![과소표집과 과대표집](%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%20(2).png)
 
 * 과소표집
 * 과대표집
@@ -85,5 +85,21 @@
 
 #### 교차검증(cross-validation)
 
-![홀드아웃 기법](C:\Users\kimminsung\OneDrive\Kdigital\PycharmProjects\kdigital_develop_intelligent_service\0824\Hold-out-method-Training-Validation-Test-Dataset.png)
+![홀드아웃 기법](Hold-out-method-Training-Validation-Test-Dataset.png)
+
+
+
+## tensorflow 실습
+
+```python
+from tensorflow.keras import Sequential;
+from tensorflow.keras.layers import Dense; # dense는 밀도를?
+
+# 가장 기본적인 세팅
+model = Sequential();
+model.add(Dense(units=1, activation='linear', input_dim=1));
+model.compile(optimizer='adam',loss='mse', metrics=['mae']);
+model.fit(x_train, y_train, epochs=300, verbose=0);
+
+```
 
