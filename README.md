@@ -5,5 +5,6 @@
 ## DeepLearning
 
 * [DL(1)](./0824/0824_DeepLearning1.md)
+* [DL(2)](./0825/0824_DeepLearning2.md)
 * 
 
