@@ -44,3 +44,7 @@ KoNLPy를 사용하기 전에 다음의 몇 가지 준비가 필요합니다.
 * jpype 복사 붙여넣기
 * pip install .\JPype1-1.1.2-cp38-cp38-win_amd64.whl
 * pip install konlpy
+
+## 실습
+
+* 토큰 각 분절되는 작은 값.
