@@ -12,3 +12,6 @@
 
 * [prods1-2일차](./0827-28/0827-28proDS1-2.md)
 
+## final project
+
+* [finalProJect](./final_proJ/finalProJ.md)
