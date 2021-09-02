@@ -145,8 +145,230 @@ from django.core.paginator import Paginator
 
 objects = ['john', 'paul', 'george', 'ringo', 'jane', 'mag']
 
+page = Paginator(objects, 2)
+
+print(type(page)) # 디버깅모드
 ```
 
 * 범위 [총 개수/페이지 수]
   * 화면에 내용을 띄어주는 것
   * 페이지의 갯수
+* 디버깅 모드 활용법
+  * 변수 확인 방법 브레이크 포인트 설정 후 콘솔을 눌러서 확인
+
+```powershell
+Connected to pydev debugger (build 212.4746.96)
+
+
+type(page)
+Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40) [MSC v.1900 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.16.1 -- An enhanced Interactive Python. Type '?' for help.
+PyDev console: using IPython 7.16.1
+Out[1]: django.core.paginator.Paginator
+
+
+In[2] : page.count
+Out[2]: 6
+
+
+In[3] : page.num_pages
+Out[3]: 3
+
+In[4] : page.page(2) 	# 난 두번째 페이지를 보고 싶어
+Out[4]: <Page 2 of 3>
+
+# 페이지 2에서 변수를 담고 싶어 
+page2 = page.page(2)
+
+In[6] :type(page2)
+Out[6]: django.core.paginator.Page
+
+# for문은 무조건 리스트여야 가능!!
+
+In[7]: page2.object_list
+Out[7]: ['george', 'ringo']
+
+# 딕셔너리로!!!
+```
+
+* 다음 페이지에 있냐!?
+
+```python
+In[8] : page2.has_next()
+Out[8]: True
+# 페이지의 처음과 끝을 표시할때 이것을 활용함.
+
+page2.has_previous()
+Out[9]: True
+```
+
+* 앞에도 페이지가 있고 뒤에도 페이지가 있어서 이렇게 양쪽다 `True`가 나오게 됨.
+
+### 이제 실전
+
+* 장고에서는 외부에서 요청을 받기때문에 `request`
+* 
+
+```python
+from django.core.paginator import Paginator
+
+def list_paginator(request):
+    conn = sqlite3.connect('db.sqlite3') # DB 연결
+    conn.row_factory = sqlite3.Row  # for getting columns sqlite에서는 넣어야함.
+    curs = conn.cursor()				# 커서로 변수를 가져옴
+    curs.execute('select * from polls_economics pe') 
+    # 커서를 잡아오기 위해 `execute`를 사용 = SQL문
+    data = curs.fetchall()
+    # select한 변수를 전부 담아주는 fetchall
+
+
+    return
+```
+
+* 딕셔너리는 `key`와 `value`로
+* urls.py에 추가
+
+```python
+    path('board/list_paginator', boardviews.list_paginator),
+```
+
+#### 이제는 다시 manage.py에서 디버깅모드
+
+* http://127.0.0.1:8000/board/list_paginator
+
+```python
+type(row)
+Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40) [MSC v.1900 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.16.1 -- An enhanced Interactive Python. Type '?' for help.
+PyDev console: using IPython 7.16.1
+Out[1]: sqlite3.Row
+
+    
+type(data)
+Out[2]: list
+```
+
+#### 이제 완성
+
+```python
+from django.core.paginator import Paginator
+
+def list_paginator(request):
+    conn = sqlite3.connect('db.sqlite3')
+    conn.row_factory = sqlite3.Row  # for getting columns
+    curs = conn.cursor()
+    # economics
+    curs.execute('select * from polls_economics pe')
+    data = curs.fetchall()
+    for row in data:
+        print(row['title'], row['href'])
+    paginator = Paginator(data, 5)
+    result = dict()
+    result['paginator'] = paginator
+    return render(request, 'board/list_paginator.html', context=result)
+```
+
+#### 이제 html로 [board/list_paginator.html]
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<body>
+<div class="container">
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>title</th>
+                <th>links</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="pagination">
+        <li class="page-item active"><a class="page-link" href="#">Page  of </a></li>
+        <li class="page-item"><a class="page-link" href="?page=">Next</a></li>
+        <li class="page-item"><a class="page-link" href="?page=">last &raquo;</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
+```
+
+* `container `: 센터를 잡음
+* `table` : class
+* `ul` : paginator
+
+### 페이지네이션 구현
+
+페이지 네이터와 페이지의 갯수를 넘겨야함.
+
+```html
+		 <tbody>
+            {% for row in page_obj %}
+            <tr>
+                <td>{{ row.title }}</td>
+                <td>{{ row.href }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+```
+
+* 변수는 {{ }}
+
+#### 지금은 페이지 부분
+
+1. 자기 페이지가 뭔지 표기 하기(현재 페이지)
+
+```html
+        <li class="page-item active"><a class="page-link" href="#">Page {{ page_obj.number }}  of {{ paginator.num_pages }}</a></li>
+```
+
+* Page {{ page_obj.number }}  of {{ paginator.num_pages }}
+
+2. 다음 페이지 표시
+   * GET 방식으로 받기
+
+```html
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+```
+
+#### 최종적인 list_paginator
+
+```python
+def list_paginator(request):
+    conn = sqlite3.connect('db.sqlite3')
+    conn.row_factory = sqlite3.Row  # for getting columns
+    curs = conn.cursor()
+    # economics
+    curs.execute('select * from polls_economics pe')
+    data = curs.fetchall()
+    for row in data:
+        print(row['title'], row['href'])
+    paginator = Paginator(data, 5)
+    result = dict()
+    result['paginator'] = paginator
+    # request.GET['page']
+    page_number = request.GET.get('page', 1)
+    result['page_obj'] = paginator.get_page(page_number)
+    return render(request, 'board/list_paginator.html', context=result)
+```
+
+
+
