@@ -127,6 +127,8 @@
 ## 장고에서의 DB 세팅
 
 * 항상 디버깅 모드로 창을 띄어라!
+* python manage.py runserver 80 이거 대신 manage .py - 파이참 상단 [manage ▼] - edit configuration - parameters 옆에 runserver 입력
+
 * manage.py 에디팅
 * DB Browser 세팅
   * settings - plugin - database navigator - restart
@@ -370,5 +372,162 @@ def list_paginator(request):
     return render(request, 'board/list_paginator.html', context=result)
 ```
 
+## DB 설계
 
+### 건축에서 설계서를 만드는 이유
 
+* 일관성을 만들기 위해서
+* 문서가 다음 사람에게 
+* 글로 작성하기 때문에, 오해가 발생할 수 있다.
+
+#### DB의 설계도를  ERD를 통해 보게 됨.
+
+* DB 설계도를 못본다, DB를 못만든다!
+
+### DB 설계
+
+1. Story book 혹은 ERD 클라우드로 table 설계 후 Export
+
+2. 파이탐에서 DB 브라우저 
+
+   * auto-commit 체크
+   * connection CREATE TABLE
+   * reload
+
+3. 컬럼 설계
+
+   * category : 별도의 테이블
+   * public_date : 별도의 테이블
+   * title : 값이 겹치는지? - 스크래핑의 문제 자료의 문제가 아님 - duplication으로 없애야함.
+
+4. RDB는 주체를 생각할수 있어야함. - 어떻게든 연결고리가 있어야하는 것이 특징!
+
+5. 각 테이블의 유니크한 값+ 숫자에 `PRIMARY_KEY`설정
+
+   ![ONE_N](one-N.png)
+
+6. ONE N : 1대 다(多) 를 나타내는 표시
+
+   * `작은_TB`에서 `원래_TB`로!
+
+![DB&RDB](DB&RDB.png)
+
+* 같은 TABLE 하지만 관계형 DB로 변환
+* Story book을 통해 SQL문 EXPORT
+
+```mysql
+CREATE TABLE category_table
+(
+  id            INTEGER NOT NULL,
+  category_name TEXT    NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE economics_table
+(
+  id             INTEGER NOT NULL,
+  create_date    TEXT    NOT NULL,
+  href           TEXT    NOT NULL,
+  title          TEXT`   NOT NULL,
+  id_category    INTEGER NOT NULL,
+  id_public_date INTEGER NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE polls_economics_demmy
+(
+  id          INTEGER NOT NULL,
+  public_date TEXT    NOT NULL,
+  category    TEXT    NOT NULL,
+  create_date TEXT    NOT NULL,
+  href        TEXT    NOT NULL,
+  title       TEXT    NOT NULL,
+                      NULL    ,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE public_date_table
+(
+  id          INTEGER NOT NULL,
+  public_date TEXT    NOT NULL,
+  PRIMARY KEY (id)
+);
+
+ALTER TABLE economics_table
+  ADD CONSTRAINT FK_category_table_TO_economics_table
+    FOREIGN KEY (id_category)
+    REFERENCES category_table (id);
+
+ALTER TABLE economics_table
+  ADD CONSTRAINT FK_public_date_table_TO_economics_table
+    FOREIGN KEY (id_public_date)
+    REFERENCES public_date_table (id);
+```
+
+* DB 생성 순서
+
+  1. 참조한 TB 먼저!
+
+     * category_TB
+
+     ```sqlite
+     CREATE TABLE category_table
+     (
+       id            INTEGER NOT NULL,
+       category_name TEXT    NOT NULL,
+       PRIMARY KEY (id)
+     );
+     ```
+
+     * public_date_TB
+
+     ```sqlite
+     CREATE TABLE public_date_table
+     (
+       id          INTEGER NOT NULL,
+       public_date TEXT    NOT NULL,
+       PRIMARY KEY (id)
+     );
+     ```
+
+     * economics_TB
+
+     ```sqlite
+     CREATE TABLE economics_table
+     (
+       id             INTEGER NOT NULL,
+       create_date    TEXT    NOT NULL,
+       href           TEXT    NOT NULL,
+       title          TEXT   NOT NULL,
+       id_category    INTEGER NOT NULL,
+       id_public_date INTEGER NOT NULL,
+       PRIMARY KEY (id)
+     );
+     ```
+
+  2. 제약 조건
+
+     > `sqlite`는 제약조건의 관계설정은 어렵지만, 제약조건은 테이블에 설정할 수 있음.
+
+  ```sqlite
+  CREATE TABLE economics_table
+  (
+    id             INTEGER NOT NULL,
+    create_date    TEXT    NOT NULL,
+    href           TEXT    NOT NULL,
+    title          TEXT   NOT NULL,
+    id_category    INTEGER NOT NULL,
+    id_public_date INTEGER NOT NULL,
+    PRIMARY KEY (id),
+     FOREIGN KEY (id_category)
+      REFERENCES category_table (id),
+     FOREIGN KEY (id_public_date)
+      REFERENCES public_date_table (id)
+  );
+  ```
+
+  ### 그렇담 이제 TEST
+
+  1. connection 우클릭 - new SQL 
+  2. economics_TB 에서 insert SQL문 
+  3. 이제 value를 지정해서 넣어보기!
