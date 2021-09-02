@@ -117,3 +117,36 @@
 
 1. 와이어프레임 툴
 
+# 0902 파이널 프로젝트3
+
+## 금일의 과제 내용
+
+* ERD 툴
+* 인터페이스 데피니션
+
+## 장고에서의 DB 세팅
+
+* 항상 디버깅 모드로 창을 띄어라!
+* manage.py 에디팅
+* DB Browser 세팅
+  * settings - plugin - database navigator - restart
+* DB 브라우저에서 +
+  * ... 클릭 - db.sqlite 지정
+  * Extract SQL statement - select SQL - RUN
+
+## 장고의 기능
+
+### Paginator
+
+> paginator는 list를 기준으로 동작함.
+
+```python
+from django.core.paginator import Paginator
+
+objects = ['john', 'paul', 'george', 'ringo', 'jane', 'mag']
+
+```
+
+* 범위 [총 개수/페이지 수]
+  * 화면에 내용을 띄어주는 것
+  * 페이지의 갯수
