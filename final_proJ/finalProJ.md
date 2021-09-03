@@ -531,3 +531,165 @@ ALTER TABLE economics_table
   1. connection 우클릭 - new SQL 
   2. economics_TB 에서 insert SQL문 
   3. 이제 value를 지정해서 넣어보기!
+
+#### DB에는 더미 데이터를 넣어봄이...
+
+
+
+## 스크래핑 결과를 DB의  `TB`에 넣기
+
+1. 하루에 특정 만큼 스크래핑을 함.
+
+```python
+!python -m pip install schedule
+```
+
+2. 함수 정의
+
+```python
+import schedule
+import time
+
+def job01():
+    print('job01() working ....')
+    # return
+```
+
+3. `while`문 정의
+
+```python
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+```
+
+4. 스케줄 등록하는 방법
+
+```python
+schedule.every(1).minutes.do(job01)
+# 1분 마다 job01
+```
+
+5. 특정시간대 과업 등록
+
+```python
+schedule.every().day.at('14:30').do(job01)
+```
+
+
+
+### 백엔드/프론트엔드 : 인터페이스 정의서(다음주 까지~)
+
+![Interface_Definition](Interface_Definition_Template.png)
+
+> 주로 BackEnd 가 작성 : 이렇게 혼란 스럽지 않게!
+>
+> 최소 2개는 시트를 만든다.
+
+1. views : 백엔드
+2. html : 프론트엔드
+
+## RDB로 하는 이유!!!
+
+1. Key를 제대로 넣었을때와 넣지 않았을때의 차이를 비교해보자!
+   * category
+   * public_date
+2. 데이터 `INSERT`
+
+```sqlite
+# 넣기
+
+insert into public_date_table(
+    public_date) 
+    values(
+    '20211030')
+;
+
+insert into category_table (
+    category_name)
+values (
+    '정치')
+;
+
+
+
+insert into category_table (
+    category_name)
+values (
+    '스포츠')
+;
+# 확인
+select
+    ct.category_name,
+    ct.id
+from
+    category_table ct;
+
+select
+    pdt.id,
+    pdt.public_date
+from
+    public_date_table pdt;
+
+```
+
+```
+```
+
+```sqlite
+insert into economics_table (
+    create_date,
+    href,
+    id_category,
+    id_public_date,
+    title)
+values (
+    '2021-09-02 05:06:52',
+    'https://news.v.daum.net/v/20210902094246843',
+    1,
+    2,
+    '"물류대란 막자"..HMM 노사 협상개시 77일만에 최종타결')
+;
+```
+
+```sqlite
+select
+    et.create_date,
+    et.href,
+    et.id,
+    et.id_category,
+    et.id_public_date,
+    et.title
+from
+    economics_table et;
+```
+
+* join 해서 보기
+
+```sqlite
+select * 
+from
+    economics_table et
+    inner join public_date_table pdt
+    on et.id_public_date = pdt.id
+    inner join category_table ct
+    on et.id_category = ct.id
+    ;
+```
+
+## 고정 주제 관련
+
+1. 내일 오전 시작 전에 
+2. 한 분이 스크래핑을 맡아서 해주셔야 함.
+3. 팀 내에서 한 명만 고정-스크래핑만 하실 수 있게!
+
+
+
+# 0903 파이널프로젝트 4
+
+## 전달사항
+
+* 주제 정하고, 기획안 까지는 오늘 나와야함.
+* ERD까지는 나오는게 좋음
+* 인터페이스 정의서는 아직
+* 지정 주제 두분만 미팅을 따로 진행할 예정.
